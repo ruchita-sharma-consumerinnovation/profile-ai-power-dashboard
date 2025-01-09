@@ -13,16 +13,19 @@ import {
 } from "@/components/ui/sidebar"
 
 export function SideNavigation() {
-  const [activeTab, setActiveTab] = useState<'responses' | 'analytics'>('responses')
+  const [activeTab, setActiveTab] = useState<'responses' | 'analytics' | 'funnel_stats'>('responses')
   const router = useRouter()
 
-  const handleTabChange = (tab: 'responses' | 'analytics') => {
+  const handleTabChange = (tab: 'responses' | 'analytics' | 'funnel_stats') => {
     setActiveTab(tab)
     if (tab === 'responses') {
       router.push('/dashboard')
-    } else {
+    } else if (tab === 'analytics') {
         router.push('/analytics')
       console.log('Analytics tab clicked')
+    }
+    else{
+      router.push('/funnel_statistics')
     }
   }
 
@@ -49,6 +52,15 @@ export function SideNavigation() {
             >
               <BarChart className="mr-2" />
               Analytics
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() => handleTabChange('funnel_stats')}
+              isActive={activeTab === 'funnel_stats'}
+            >
+              <FileText className="mr-2" />
+              Funnel Statistics
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
