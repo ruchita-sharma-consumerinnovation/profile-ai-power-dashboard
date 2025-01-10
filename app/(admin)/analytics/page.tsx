@@ -84,6 +84,7 @@ export default function QuizResultsPage() {
                     data={quizData}
                     stepId={stepId}
                     questionId={question.question_id}
+                    totalResponses={quizData.length}
                   />
                 </div>
               ))}

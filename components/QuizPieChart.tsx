@@ -24,11 +24,12 @@ interface QuizPieChartProps {
   data: QuizResponse[]
   stepId: string
   questionId: string
+  totalResponses: number
 }
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#A4DE6C']
 
-export default function QuizPieChart({ data, stepId, questionId }: QuizPieChartProps) {
+export default function QuizPieChart({ data, stepId, questionId, totalResponses }: QuizPieChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>()
 
   const chartData = React.useMemo(() => {
@@ -54,7 +55,7 @@ export default function QuizPieChart({ data, stepId, questionId }: QuizPieChartP
       value,
       percentage: (value / totalResponses) * 100
     }))
-  }, [data, stepId, questionId])
+  }, [data, stepId, questionId, totalResponses])
 
   const question = data[0]?.quiz_data.responses[stepId]?.questions.find(q => q.question_id === questionId)
 
@@ -126,7 +127,7 @@ export default function QuizPieChart({ data, stepId, questionId }: QuizPieChartP
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="text-lg">{question.question_text}</CardTitle>
-        <CardDescription>Response distribution</CardDescription>
+        <CardDescription>Response distribution - Total Response: {totalResponses}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer
