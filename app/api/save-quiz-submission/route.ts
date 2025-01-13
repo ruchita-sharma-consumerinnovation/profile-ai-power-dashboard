@@ -6,13 +6,16 @@ export async function POST(request: Request) {
     // Parse the JSON body from the request
     const quizSubmission = await request.json()
 
+    // Extract the final_score from the request body
+    const finalScore = quizSubmission.meta.final_score
+
     // Save the submission to the database
     const query = `
-      INSERT INTO quiz_submissions (quiz_data)
-      VALUES ($1)
+      INSERT INTO quiz_submissions (quiz_data, final_score)
+      VALUES ($1, $2)
       RETURNING id, uuid, created_at, updated_at;
     `
-    const values = [JSON.stringify(quizSubmission)] // Assuming quiz data is an object
+    const values = [JSON.stringify(quizSubmission), finalScore] // Save both quiz data and final_score
 
     const result = await getDbClient().query(query, values)
 

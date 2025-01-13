@@ -13,6 +13,7 @@ interface Submission {
 interface DashboardData {
   submissions: Submission[]
   totalSubmissions: number
+  averageScore: number
 }
 
 interface QuizResponse {
@@ -85,6 +86,7 @@ export default function Dashboard() {
         </CardHeader>
         <CardContent>
           <p className="text-lg mb-4">Total Submissions: {dashboardData.totalSubmissions}</p>
+          <p className="text-lg mb-4">Average Score: {dashboardData.averageScore}</p>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {dashboardData.submissions.map((submission) => (
               <Card key={submission.id} className="hover:shadow-lg transition-shadow">
