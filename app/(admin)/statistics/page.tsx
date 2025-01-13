@@ -139,6 +139,10 @@ export default function StatisticsPage() {
                           {new Date(data.updated_at).toLocaleString()}
                         </div>
                         <div>
+                        <div>
+                          <strong>Total Users who Completed the Quiz:</strong>{" "}
+                          {data.step5_visitors}
+                        </div>
                           <strong>Completion Percentage:</strong>{" "}
                           {calculateCompletionPercentage(
                             data.initial_visitors,
