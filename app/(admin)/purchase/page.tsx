@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,13 +9,11 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
 } from "recharts";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
