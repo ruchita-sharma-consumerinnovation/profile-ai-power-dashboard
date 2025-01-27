@@ -14,7 +14,7 @@ export async function GET(request: Request) {
 
     // Query to get the quiz_data by ID
     const query = `
-      SELECT quiz_data FROM quiz_submissions WHERE id = $1;
+      SELECT * FROM quiz_submissions WHERE id = $1;
     `
     const values = [id]
     const result = await getDbClient().query(query, values)
@@ -24,8 +24,17 @@ export async function GET(request: Request) {
       return NextResponse.json({ message: 'Submission not found' }, { status: 404 })
     }
 
+       // Calculate the average amount paid per country
+       const avgQuery = `
+       SELECT country, AVG(amount_paid) AS average_amount
+       FROM quiz_submissions
+       GROUP BY country;
+     `;
+     const avgResult = await getDbClient().query(avgQuery);
+ 
     // Return the quiz_data as JSON
-    return NextResponse.json(result.rows[0].quiz_data, { status: 200 })
+    return NextResponse.json(result.rows, { status: 200 })
+
   } catch (error) {
     console.error('Error fetching quiz data:', error)
     return NextResponse.json({ message: 'Error fetching quiz data' }, { status: 500 })

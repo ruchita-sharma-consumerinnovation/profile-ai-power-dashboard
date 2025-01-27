@@ -75,7 +75,7 @@ export default function StatisticsPage() {
     step5: number
   ): string => {
     if (initial === 0) return "0%";
-    return ((initial/step5) * 100).toFixed(2) + "%";
+    return ((step5/initial) * 100).toFixed(2) + "%";
   };
 
   const chartData =
