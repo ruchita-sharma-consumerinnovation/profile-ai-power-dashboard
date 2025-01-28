@@ -13,24 +13,25 @@ import {
 } from "@/components/ui/sidebar"
 
 export function SideNavigation() {
-  const [activeTab, setActiveTab] = useState<'responses' | 'analytics' | 'statistics' | 'purchase'>('responses')
+  const [activeTab, setActiveTab] = useState<'responses' | 'analytics' | 'statistics' | 'purchase' | 'quiz'>('responses')
   const router = useRouter()
 
-  const handleTabChange = (tab: 'responses' | 'analytics' | 'statistics' | 'purchase') => {
+  const handleTabChange = (tab: 'responses' | 'analytics' | 'statistics' | 'purchase' | 'quiz') => {
     setActiveTab(tab)
     if (tab === 'responses') {
       router.push('/dashboard')
     } else if (tab === 'analytics') {
-        router.push('/analytics')
+      router.push('/analytics')
       console.log('Analytics tab clicked')
-    }
-    else if(tab === 'statistics'){
+    } else if (tab === 'statistics') {
       router.push('/statistics')
       console.log('Statistics tab clicked')
-    }
-    else{
+    } else if (tab === 'purchase') {
       router.push('/purchase')
-      console.log('Statistics tab clicked')
+      console.log('Purchase tab clicked')
+    } else if (tab === 'quiz') {
+      router.push('/quiz-answer-analysis')
+      console.log('Quiz Answer Analysis tab clicked')
     }
   }
 
@@ -77,9 +78,17 @@ export function SideNavigation() {
               Purchase Statistics
             </SidebarMenuButton>
           </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() => handleTabChange('quiz')}
+              isActive={activeTab === 'quiz'}
+            >
+              <FileText className="mr-2" />
+              Quiz Answer Analysis
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
     </Sidebar>
   )
 }
-
