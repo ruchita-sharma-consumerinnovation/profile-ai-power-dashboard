@@ -13,10 +13,10 @@ import {
 } from "@/components/ui/sidebar"
 
 export function SideNavigation() {
-  const [activeTab, setActiveTab] = useState<'responses' | 'analytics' | 'statistics' | 'purchase' | 'quiz'>('responses')
+  const [activeTab, setActiveTab] = useState<'responses' | 'analytics' | 'statistics' | 'purchase' | 'utm-stats' | 'quiz'>('responses')
   const router = useRouter()
 
-  const handleTabChange = (tab: 'responses' | 'analytics' | 'statistics' | 'purchase' | 'quiz') => {
+  const handleTabChange = (tab: 'responses' | 'analytics' | 'statistics' | 'purchase' | 'utm-stats' | 'quiz') => {
     setActiveTab(tab)
     if (tab === 'responses') {
       router.push('/dashboard')
@@ -29,6 +29,9 @@ export function SideNavigation() {
     } else if (tab === 'purchase') {
       router.push('/purchase')
       console.log('Purchase tab clicked')
+    }else if (tab === 'utm-stats') {
+      router.push('/utm-stats')
+      console.log('UTM Stats tab clicked')
     } else if (tab === 'quiz') {
       router.push('/quiz-answer-analysis')
       console.log('Quiz Answer Analysis tab clicked')
@@ -78,6 +81,16 @@ export function SideNavigation() {
               Purchase Statistics
             </SidebarMenuButton>
           </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() => handleTabChange('utm-stats')}
+              isActive={activeTab === 'utm-stats'}
+            >
+              <FileText className="mr-2" />
+              UTM Statistics
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem></SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={() => handleTabChange('quiz')}

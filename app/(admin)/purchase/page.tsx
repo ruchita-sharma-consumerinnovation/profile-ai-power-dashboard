@@ -11,12 +11,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
@@ -93,6 +88,10 @@ const PurchaseDataPage = () => {
   const [result, setResult] = useState(null);
   const [percentageDisplayData, setPercentageDisplayData] = useState(null);
   const [utmSourcesPercent, setUtmSourcesPercent] = useState(null);
+  const [averagePurchase, setAveragePurchase] = useState<number | null>(null);
+  const [averagePerCurrency, setAveragePerCurrency] = useState<{
+    [currency: string]: number;
+  }>({});
 
   useEffect(() => {
     if (result != null) {
@@ -125,8 +124,6 @@ const PurchaseDataPage = () => {
         const data = await response.json();
         const submissions = data.submissions; // Assuming the response is structured as { submissions: [...] }
 
-        setPurchaseData(submissions);
-
         // Calculate total price per currency in USD
         const totalPerCurrency: TotalPricePerCurrency = submissions.reduce(
           (acc: any, submission: any) => {
@@ -141,6 +138,30 @@ const PurchaseDataPage = () => {
           },
           {}
         );
+
+        // Calculate the total and average purchase amount
+        const totalAmount = submissions.reduce(
+          (sum, submission) => sum + Number(submission.amount_paid || 0),
+          0
+        );
+
+        const avgPurchase =
+          submissions.length > 0 ? totalAmount / submissions.length : null;
+
+        // Calculate average per currency
+        const avgPerCurrency: { [currency: string]: number } = {};
+        Object.entries(totalPerCurrency).forEach(([currency, total]) => {
+          const count = submissions.filter(
+            (s) => s.currency === currency
+          ).length;
+          avgPerCurrency[currency] = count > 0 ? total / count : 0;
+        });
+
+        setAveragePurchase(avgPurchase);
+        console.log(avgPurchase);
+        setAveragePerCurrency(avgPerCurrency);
+
+        setPurchaseData(submissions);
 
         // Filter submissions where amount_paid is not null and greater than 0
         const nonNullAmounts = data.submissions.filter(
@@ -250,6 +271,65 @@ const PurchaseDataPage = () => {
             </tbody>
           </table>
 
+          <h2 className="text-xl font-semibold mt-6">
+            Average Purchase Amount
+          </h2>
+          <p>
+            {averagePurchase
+              ? `$${averagePurchase.toFixed(2)}`
+              : "No data available"}
+          </p>
+
+          <h2 className="text-xl font-semibold mt-6">
+            Average Amount Per Currency
+          </h2>
+          <ul>
+            {Object.entries(averagePerCurrency).map(([currency, avg]) => (
+              <li key={currency}>
+                {currency}: ${avg.toFixed(2)}
+              </li>
+            ))}
+          </ul>
+
+          <Card className="w-full max-w-3xl mt-8">
+            <CardHeader>
+              <CardTitle>Average Purchase Amount By Currency (in USD)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer
+                config={{
+                  avgAmount: {
+                    label: "Average amount",
+                    color: "hsl(var(--chart-2))",
+                  },
+                }}
+                className="h-[400px]"
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={Object.entries(averagePerCurrency).map(
+                      ([currency, avg]) => ({
+                        currency,
+                        avg,
+                      })
+                    )}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="currency" />
+                    <YAxis />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Bar
+                      dataKey="avg"
+                      fill="#4A90E2)"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+
           <Card className="w-full max-w-3xl mt-8">
             <CardHeader>
               <CardTitle>Total Purchases By Currency (in USD)</CardTitle>
@@ -295,7 +375,7 @@ const PurchaseDataPage = () => {
           </h2>
           {percentageDisplayData !== null ? (
             <p>
-              {percentageDisplayData}% of users who completed the quiz have made
+              {percentageDisplayData.toFixed(2)}% of users who completed the quiz have made
               a purchase
             </p>
           ) : (
