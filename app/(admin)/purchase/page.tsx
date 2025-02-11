@@ -73,7 +73,6 @@ const PurchaseDataPage = () => {
   const [visitorData, setVisitorData] = useState<VisitorData[]>([]);
   const [result, setResult] = useState(null);
   const [percentageDisplayData, setPercentageDisplayData] = useState(null);
-  const [utmSourcesPercent, setUtmSourcesPercent] = useState(null);
   const [averagePurchase, setAveragePurchase] = useState<number | null>(null);
   const [averagePerCurrency, setAveragePerCurrency] = useState<{
     [currency: string]: number;
@@ -93,7 +92,6 @@ const PurchaseDataPage = () => {
         };
       });
       setPercentageDisplayData(totalPurchasersPecentage);
-      setUtmSourcesPercent(updatedUTMSources);
       console.log(updatedUTMSources);
     }
   }, [result, visitorData]);
@@ -366,74 +364,6 @@ const PurchaseDataPage = () => {
             </p>
           ) : (
             <p>Data is insufficient to calculate the percentage</p>
-          )}
-          {utmSourcesPercent != null ? (
-            <Card className="w-full max-w-lg mt-8">
-              <CardHeader>
-                <CardTitle>
-                  Purchase Percentage By Source Distribution
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ChartContainer
-                  config={{
-                    percentage: {
-                      label: "Percentage",
-                    },
-                    total_amount_more_than_zero: {
-                      label: "Total Amount > 0",
-                    },
-                  }}
-                  className="h-[300px]"
-                >
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={utmSourcesPercent}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="percentage"
-                      >
-                        {utmSourcesPercent.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <ChartTooltip
-                        content={
-                          <ChartTooltipContent
-                            valueFormatter={(value, name) => {
-                              if (name === "percentage") return `${value}%`;
-                              return value.toString();
-                            }}
-                          />
-                        }
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-                <div className="mt-4 flex flex-wrap justify-center gap-4">
-                  {utmSourcesPercent.map((entry, index) => (
-                    <div key={`legend-${index}`} className="flex items-center">
-                      <div
-                        className="mr-2 h-3 w-3"
-                        style={{
-                          backgroundColor: COLORS[index % COLORS.length],
-                        }}
-                      />
-                      <span>{entry.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <p>No data available.</p>
           )}
         </>
       )}
