@@ -36,20 +36,6 @@ interface PurchaseData {
   final_converted_to_usd_amount: number | null;
 }
 
-const conversionRates: { [currency: string]: number } = {
-  USD: 1,
-  GBP: 1.3,
-  CHF: 1.1,
-  SGD: 0.75,
-  CAD: 0.8,
-  AUD: 0.65,
-  NZD: 0.6,
-  NOK: 0.11,
-  AED: 0.27,
-  JPY: 0.0074,
-  EUR: 1.12,
-};
-
 export async function GET() {
   try {
     // Query to fetch UUID, quiz_data, amount_paid, country, and currency
@@ -62,24 +48,6 @@ export async function GET() {
 
     // Analyze quiz data
     const analysis = analyzeQuizData(results.rows);
-
-    // Prepare purchase data
-    // const purchaseData: PurchaseData[] = results.rows.map((row) => {
-    //   const final_converted_to_usd_amount =
-    //     row.amount_paid && row.currency
-    //       ? (row.amount_paid * (conversionRates[row.currency] || 1)).toFixed(2)
-    //       : null;
-
-    //   return {
-    //     uuid: row.uuid,
-    //     amount_paid: row.amount_paid,
-    //     country: row.country,
-    //     currency: row.currency,
-    //     final_converted_to_usd_amount: final_converted_to_usd_amount
-    //       ? parseFloat(final_converted_to_usd_amount)
-    //       : null,
-    //   };
-    // });
 
     return NextResponse.json({ analysis }, { status: 200 });
   } catch (error) {
