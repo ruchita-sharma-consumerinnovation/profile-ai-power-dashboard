@@ -15,7 +15,7 @@ const UTMPurchaseAnalysis: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/fetch-utm-data")
+        const response = await fetch("/api/fetch-utm-data")
         const data = await response.json()
         setUtmData(data)
       } catch (error) {
